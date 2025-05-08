@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Exam Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>School Exam Platform</h1>
+            <div id="user-info">
+                <span id="user-name"></span>
+                <button id="logout-btn" class="hidden">Logout</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Auth Section -->
+            <section id="auth-section">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="register">Register</button>
+                </div>
+
+                <div id="login-form" class="form-container active">
+                    <h2>Login</h2>
+                    <form id="login">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn primary">Login</button>
+                    </form>
+                </div>
+
+                <div id="register-form" class="form-container">
+                    <h2>Register</h2>
+                    <form id="register">
+                        <div class="form-group">
+                            <label for="register-email">Email</label>
+                            <input type="email" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password</label>
+                            <input type="password" id="register-password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password2">Confirm Password</label>
+                            <input type="password" id="register-password2" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="first-name">First Name</label>
+                            <input type="text" id="first-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Last Name</label>
+                            <input type="text" id="last-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select id="role" required>
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn primary">Register</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="hidden">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="tests">Tests</button>
+                    <button class="tab-btn" data-tab="submissions">My Submissions</button>
+                    <button class="tab-btn" data-tab="stats">Statistics</button>
+                    <button class="tab-btn teacher-only" data-tab="create-test">Create Test</button>
+                </div>
+
+                <!-- Tests List -->
+                <div id="tests-container" class="tab-content active">
+                    <h2>Available Tests</h2>
+                    <div id="tests-list" class="card-grid"></div>
+                </div>
+
+                <!-- Submissions List -->
+                <div id="submissions-container" class="tab-content">
+                    <h2>My Submissions</h2>
+                    <div id="submissions-list" class="card-grid"></div>
+                </div>
+
+                <!-- Statistics -->
+                <div id="stats-container" class="tab-content">
+                    <h2>Statistics</h2>
+                    <div id="stats-content" class="stats-grid"></div>
+                </div>
+
+                <!-- Create Test (Teacher only) -->
+                <div id="create-test-container" class="tab-content">
+                    <h2>Create New Test</h2>
+                    <form id="create-test-form">
+                        <div class="form-group">
+                            <label for="test-title">Title</label>
+                            <input type="text" id="test-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="test-description">Description</label>
+                            <textarea id="test-description" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="test-subject">Subject</label>
+                            <input type="text" id="test-subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="test-time-limit">Time Limit (minutes)</label>
+                            <input type="number" id="test-time-limit" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="test-active">Active</label>
+                            <input type="checkbox" id="test-active" checked>
+                        </div>
+                        
+                        <h3>Questions</h3>
+                        <div id="questions-container"></div>
+                        <button type="button" id="add-question-btn" class="btn secondary">Add Question</button>
+                        
+                        <button type="submit" class="btn primary">Create Test</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Test Taking Section -->
+            <section id="test-section" class="hidden">
+                <div class="test-header">
+                    <h2 id="test-name"></h2>
+                    <div class="test-info">
+                        <p id="test-description-display"></p>
+                        <p>Subject: <span id="test-subject-display"></span></p>
+                        <p>Time Remaining: <span id="time-remaining"></span></p>
+                    </div>
+                </div>
+                
+                <div id="questions"></div>
+                
+                <button id="submit-test" class="btn primary">Submit Test</button>
+            </section>
+
+            <!-- Test Result Section -->
+            <section id="result-section" class="hidden">
+                <h2>Test Results</h2>
+                <div class="result-summary">
+                    <p>Score: <span id="test-score"></span></p>
+                    <p>Status: <span id="test-status"></span></p>
+                </div>
+                <div id="result-details"></div>
+                <button id="back-to-dashboard" class="btn primary">Back to Dashboard</button>
+            </section>
+        </main>
+
+        <div id="notification" class="notification"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

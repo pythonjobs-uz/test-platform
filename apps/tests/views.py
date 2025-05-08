@@ -15,14 +15,14 @@ class TestViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return TestListSerializer
-        if self.action == 'student_tests':
+        if self.action in ['student_tests', 'start']:
             return StudentTestSerializer
         return TestSerializer
     
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
             permission_classes = [IsTeacher | IsAdmin]
-        elif self.action == 'student_tests':
+        elif self.action in ['student_tests', 'start']:
             permission_classes = [IsStudent]
         else:
             permission_classes = [permissions.IsAuthenticated]
@@ -43,6 +43,24 @@ class TestViewSet(viewsets.ModelViewSet):
         questions = test.questions.all()
         serializer = QuestionSerializer(questions, many=True)
         return Response(serializer.data)
+    
+    @action(detail=True, methods=['get'])
+    def start(self, request, pk=None):
+        test = self.get_object()
+        if not test.is_active:
+            return Response(
+                {"detail": "This test is not active."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        serializer = self.get_serializer(test)
+        data = serializer.data
+        
+        questions = test.questions.all().prefetch_related('choices')
+        questions_data = QuestionSerializer(questions, many=True).data
+        data['questions'] = questions_data
+        
+        return Response(data)
 
 class QuestionViewSet(viewsets.ModelViewSet):
     serializer_class = QuestionSerializer
